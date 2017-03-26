@@ -34,30 +34,45 @@ public class Hopf {
 
 		String stored[] = { "1 2 3", "4 5 6", "7 8 9" };
 		float weight[][] = wArray(stored);
-		
+
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				System.out.println(weight[i][j]);
 			}
 		}
 		// should output the same as above
-		
-		int corrupted[] = {10,20,30};
+
+		int corrupted[] = { 10, 20, 30 };
 		float aList[] = aCalc(weight, corrupted);
-		for(int i = 0; i<3; i++){
+		for (int i = 0; i < 3; i++) {
 			System.out.println(aList[i]);
 		}
 		aList.toString();
-		
+
 		String bill[] = { "1 -1 -1 1", "1 -1 1 1", "-1 1 -1 1" };
-		float ben[][] = wArray(bill);	
-		
+		float ben[][] = wArray(bill);
+
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				System.out.println(ben[i][j]);
 			}
 		}
 		
+		
+		String trainers[] = {"1 1 1", "1 -1 1"};
+		float weighttest[][] = wArray(trainers);
+		int corrupttest[] = {1, -1, 1};
+		int fixed[] = updateX( weighttest, corrupttest);
+		for (int i = 0; i < 3; i++) {
+				System.out.println(fixed[i]);
+		}
+		
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				System.out.println(weighttest[i][j]);
+			}
+		}
+
 	}
 
 	/**
@@ -105,30 +120,58 @@ public class Hopf {
 		float dummy[][] = { { 1, 2, 3 }, { 4, 5, 6 } };
 		return wList;
 	}
+
+	private static float aICalc(int i, float[][] weight, int[] corrupt) {
+		int N = corrupt.length;
+		int total = 0;
+		for (int j = 0; j < N; j++) {
+			total += weight[i][j] * corrupt[j];
+		}
+		return total;
+	}
 	
+
+	private static int[] updateXi(int i, float[][] weight, int[] corrupt) {
+		float a = aICalc(i, weight, corrupt);
+		if (a >= 0) {
+			corrupt[i] = 1;
+		}
+		else{
+			corrupt[i] = -1;
+		}
+		return corrupt;
+	}
 	
+	private static int[] updateX(float[][] weight, int[] corrupt){
+		for(int i =0; i<corrupt.length; i++){
+			corrupt = updateXi(i, weight, corrupt);
+		}
+		return corrupt;
+	}
 	
+	private static int[][] updateAllX(float[][] weight, int[][] corrupted){
+		for(int i =0; i<corrupted.length; i++){
+			corrupted[i] = updateX(weight, corrupted[i]);
+		}
+		int dummy[][] = { { 1, 2, 3 }, { 4, 5, 6 } };
+		return corrupted;
+	}
 
 	/**
 	 * 
-	 * @param weight The double array of weights.
-	 * @param corrupt The corrupted pattern.
+	 * @param weight
+	 *            The double array of weights.
+	 * @param corrupt
+	 *            The corrupted pattern.
 	 * @return The ai values of the corrupted patterns.
 	 */
 	private static float[] aCalc(float[][] weight, int[] corrupt) {
 		int N = corrupt.length;
 		float result[] = new float[N];
-		for(int i = 0; i< N; i++){
-		int total = 0;
-		for (int j = 0; j < N; j++) {
-			total += weight[i][j]*corrupt[j];
+		for (int i = 0; i < N; i++) {
+			result[i] = aICalc(i, weight, corrupt);
 		}
-		result[i]=total;
-		}
-		float dummy[] = { 1, 2, 3 };
 		return result;
 	}
-	
-	
 
 }
