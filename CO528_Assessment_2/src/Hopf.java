@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * 
  */
@@ -29,17 +31,34 @@ public class Hopf {
 		System.out.println(wIJCalc(2, 2, mat)); // 0
 		int mat2[][] = { { 1, 2, 2 }, { 3, 4, 8 }, { 20, 1, 7 } };
 		System.out.println(wIJCalc(0, 1, mat2)); // 11.33333
+
+		String stored[] = { "1 2 3", "4 5 6", "7 8 9" };
+		float weight[][] = wArray(stored);
 		
-		String stored[]={"1 2 3", "4 5 6", "7 8 9"};
-		float dum[][] = wArray(stored);
-		for(int i = 0; i<3; i++){
-			for(int j = 0; j<3; j++){
-				System.out.println(dum[i][j]);
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				System.out.println(weight[i][j]);
 			}
 		}
-		//should output the same as above
+		// should output the same as above
+		
+		int corrupted[] = {10,20,30};
+		float aList[] = aCalc(weight, corrupted);
+		for(int i = 0; i<3; i++){
+			System.out.println(aList[i]);
 		}
-	
+		aList.toString();
+		
+		String bill[] = { "1 -1 -1 1", "1 -1 1 1", "-1 1 -1 1" };
+		float ben[][] = wArray(bill);	
+		
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				System.out.println(ben[i][j]);
+			}
+		}
+		
+	}
 
 	/**
 	 * Splits a pattern which comes as a string into an array of integers
@@ -60,10 +79,10 @@ public class Hopf {
 	private static float wIJCalc(int i, int j, int[][] stored) {
 		int N = stored.length;
 		int total = 0;
-		if(i!=j){
-		for (int n = 0; n < N; n++) {
-			total += stored[n][i] * stored[n][j];
-		}
+		if (i != j) {
+			for (int n = 0; n < N; n++) {
+				total += stored[n][i] * stored[n][j];
+			}
 		}
 		float result = (float) total / N;
 		return result;
@@ -72,18 +91,44 @@ public class Hopf {
 	private static float[][] wArray(String[] input) {
 		int N = input.length;
 		int[][] strings = new int[input.length][];
-		for(int n=0; n<N; n++){
-			strings[n]=splitPattern(input[n]);
+		for (int n = 0; n < N; n++) {
+			strings[n] = splitPattern(input[n]);
 		}
-		
+
 		int top = splitPattern(input[0]).length;
 		float wList[][] = new float[top][top];
-		for(int i = 0; i<top; i++){
-			for(int j =0; j<top; j++){
-				wList[i][j] = wIJCalc(i,j,strings);
+		for (int i = 0; i < top; i++) {
+			for (int j = 0; j < top; j++) {
+				wList[i][j] = wIJCalc(i, j, strings);
 			}
 		}
-		float dummy[][] = {{ 1, 2, 3 },{4,5,6}};
+		float dummy[][] = { { 1, 2, 3 }, { 4, 5, 6 } };
 		return wList;
 	}
+	
+	
+	
+
+	/**
+	 * 
+	 * @param weight The double array of weights.
+	 * @param corrupt The corrupted pattern.
+	 * @return The ai values of the corrupted patterns.
+	 */
+	private static float[] aCalc(float[][] weight, int[] corrupt) {
+		int N = corrupt.length;
+		float result[] = new float[N];
+		for(int i = 0; i< N; i++){
+		int total = 0;
+		for (int j = 0; j < N; j++) {
+			total += weight[i][j]*corrupt[j];
+		}
+		result[i]=total;
+		}
+		float dummy[] = { 1, 2, 3 };
+		return result;
+	}
+	
+	
+
 }

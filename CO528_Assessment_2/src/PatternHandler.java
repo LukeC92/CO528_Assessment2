@@ -7,12 +7,13 @@
  *
  */
 public class PatternHandler {
+	public int abc;
 
 	/**
 	 * Creates the PatternHandler object.
 	 */
 	public PatternHandler() {
-
+		abc =5;
 	}
 
 	/**
