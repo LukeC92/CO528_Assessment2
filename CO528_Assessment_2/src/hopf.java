@@ -1,9 +1,12 @@
-import java.util.Arrays;
+
+//import java.util.Arrays;
 import java.io.BufferedReader;
 import java.io.FileReader;
 //import java.lang.Exception;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * 
@@ -38,45 +41,43 @@ public class hopf {
 		 * 2 }, { 3, 4, 8 }, { 20, 1, 7 } }; System.out.println(wIJCalc(0, 1,
 		 * mat2)); // 11.33333
 		 * 
-		 * String stored[] = { "1 2 3", "4 5 6", "7 8 9" }; float weight[][] =
+		 * String stored[] = { "1 2 3", "4 5 6", "7 8 9" }; double weight[][] =
 		 * wArray(stored);
 		 * 
 		 * for (int i = 0; i < 3; i++) { for (int j = 0; j < 3; j++) {
 		 * System.out.println(weight[i][j]); } } // should output the same as
 		 * above
 		 * 
-		 * int corrupted[] = { 10, 20, 30 }; float aList[] = aCalc(weight,
+		 * int corrupted[] = { 10, 20, 30 }; double aList[] = aCalc(weight,
 		 * corrupted); for (int i = 0; i < 3; i++) {
 		 * System.out.println(aList[i]); } aList.toString();
 		 * 
-		 * String bill[] = { "1 -1 -1 1", "1 -1 1 1", "-1 1 -1 1" }; float
+		 * String bill[] = { "1 -1 -1 1", "1 -1 1 1", "-1 1 -1 1" }; double
 		 * ben[][] = wArray(bill);
 		 * 
 		 * for (int i = 0; i < 4; i++) { for (int j = 0; j < 4; j++) {
 		 * System.out.println(ben[i][j]); } }
+		 * 
+		 * System.out.println("Hello, " + args[0] + ".  Welcome to Java!!!");
+		 * 
+		 * String trainers[] = { "1 1 1", "1 -1 1" }; double weighttest[][] =
+		 * wArray(trainers); int corrupttest[] = { 1, -1, 1 }; int fixed[] =
+		 * updateX(weighttest, corrupttest); for (int i = 0; i < 3; i++) {
+		 * System.out.println(fixed[i]); }
+		 * 
+		 * for (int k = 0; k < 3; k++) { for (int j = 0; j < 3; j++) {
+		 * System.out.println(weighttest[k][j]); } }
 		 */
-		System.out.println("Hello, " + args[0] + ".  Welcome to Java!!!");
 
-		String trainers[] = { "1 1 1", "1 -1 1" };
-		float weighttest[][] = wArray(trainers);
-		int corrupttest[] = { 1, -1, 1 };
-		int fixed[] = updateX(weighttest, corrupttest);
-		for (int i = 0; i < 3; i++) {
-			System.out.println(fixed[i]);
-		}
+		// int[][] storedIntegers = new int[][];
 
-		for (int k = 0; k < 3; k++) {
-			for (int j = 0; j < 3; j++) {
-				System.out.println(weighttest[k][j]);
-			}
-		}
-
+		ArrayList<int[]> storedIntegers = new ArrayList<int[]>();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(args[0]));
 			String line = reader.readLine();
 			while (line != null) {
-				System.out.println(line);
-				// do something with line
+				// System.out.println(line);
+				storedIntegers.add(splitPattern(line));
 				line = reader.readLine();
 			}
 			reader.close();
@@ -85,6 +86,30 @@ public class hopf {
 		} catch (IOException e) {
 			// something went wrong with reading or closing
 		}
+		
+		double weight[][] = wArrayFromIntList(storedIntegers);
+		int N = weight.length;
+		for(int i = 0; i < N; i++){
+			for(int j = 0; j<N; j++){
+				System.out.print(weight[i][j]+ " ");
+			}
+			System.out.println();
+		}
+		
+		
+		
+		
+		/*
+		Iterator<int[]> it = storedIntegers.iterator();
+		while (it.hasNext()) {
+
+			int pat[] = it.next();
+			for (int i = 0; i < pat.length; i++) {
+				System.out.print(pat[i]);
+			}
+			System.out.println();
+		}
+		*/
 
 	}
 
@@ -103,8 +128,34 @@ public class hopf {
 		}
 		return intArray;
 	}
+	
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 * @throws FileNotFoundException if the file does not exist.
+	 * @throws IOException if something goes wrong with reading or closing.
+	 */
+	private static ArrayList<int[]> splitTxt(String file){
+		ArrayList<int[]> storedIntegers = new ArrayList<int[]>();
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String line = reader.readLine();
+			while (line != null) {
+				// System.out.println(line);
+				storedIntegers.add(splitPattern(line));
+				line = reader.readLine();
+			}
+			reader.close();
+		} catch (FileNotFoundException e) {
+			// the specified file could not be found
+		} catch (IOException e) {
+			// something went wrong with reading or closing
+		}
+		return storedIntegers;
+	}
 
-	private static float wIJCalc(int i, int j, int[][] stored) {
+	private static double wIJCalc(int i, int j, int[][] stored) {
 		int N = stored.length;
 		int total = 0;
 		if (i != j) {
@@ -112,29 +163,54 @@ public class hopf {
 				total += stored[n][i] * stored[n][j];
 			}
 		}
-		float result = (float) total / N;
+		double result = (double) total / N;
 		return result;
 	}
 
-	private static float[][] wArray(String[] input) {
+	private static double wIJCalcFromList(int i, int j, ArrayList<int[]> integerlist) {
+		int total = 0;
+		if (i != j) {
+			Iterator<int[]> it = integerlist.iterator();
+			while (it.hasNext()) {
+				int pat[] = it.next();
+				total += pat[i] * pat[j];
+			}
+		}
+		double result = (double) total / integerlist.size();
+		return result;
+	}
+
+	private static double[][] wArrayFromIntList(ArrayList<int[]> integerlist) {
+
+		int top = integerlist.get(0).length;
+		double wArray[][] = new double[top][top];
+		for (int i = 0; i < top; i++) {
+			for (int j = 0; j < top; j++) {
+				wArray[i][j] = wIJCalcFromList(i, j, integerlist);
+			}
+		}
+		return wArray;
+	}
+
+	private static double[][] wArray(String[] input) {
 		int N = input.length;
-		int[][] strings = new int[input.length][];
+		int[][] strings = new int[N][];
 		for (int n = 0; n < N; n++) {
 			strings[n] = splitPattern(input[n]);
 		}
 
 		int top = splitPattern(input[0]).length;
-		float wList[][] = new float[top][top];
+		double wList[][] = new double[top][top];
 		for (int i = 0; i < top; i++) {
 			for (int j = 0; j < top; j++) {
 				wList[i][j] = wIJCalc(i, j, strings);
 			}
 		}
-		float dummy[][] = { { 1, 2, 3 }, { 4, 5, 6 } };
+		double dummy[][] = { { 1, 2, 3 }, { 4, 5, 6 } };
 		return wList;
 	}
 
-	private static float aICalc(int i, float[][] weight, int[] corrupt) {
+	private static double aICalc(int i, double[][] weight, int[] corrupt) {
 		int N = corrupt.length;
 		int total = 0;
 		for (int j = 0; j < N; j++) {
@@ -143,8 +219,8 @@ public class hopf {
 		return total;
 	}
 
-	private static int[] updateXi(int i, float[][] weight, int[] corrupt) {
-		float a = aICalc(i, weight, corrupt);
+	private static int[] updateXi(int i, double[][] weight, int[] corrupt) {
+		double a = aICalc(i, weight, corrupt);
 		if (a >= 0) {
 			corrupt[i] = 1;
 		} else {
@@ -152,15 +228,24 @@ public class hopf {
 		}
 		return corrupt;
 	}
+	
+	private static int[] updateXRepeat(double[][] weight, int[] corrupt) {
+		int start[] = corrupt;
+		int end[] = new int[corrupt.length];
+		while(!start.equals(end)){
+			end = updateX(weight, start);
+		}
+		return end;
+	}	
 
-	private static int[] updateX(float[][] weight, int[] corrupt) {
+	private static int[] updateX(double[][] weight, int[] corrupt) {
 		for (int i = 0; i < corrupt.length; i++) {
 			corrupt = updateXi(i, weight, corrupt);
 		}
 		return corrupt;
 	}
 
-	private static int[][] updateAllX(float[][] weight, int[][] corrupted) {
+	private static int[][] updateAllX(double[][] weight, int[][] corrupted) {
 		for (int i = 0; i < corrupted.length; i++) {
 			corrupted[i] = updateX(weight, corrupted[i]);
 		}
@@ -176,9 +261,9 @@ public class hopf {
 	 *            The corrupted pattern.
 	 * @return The ai values of the corrupted patterns.
 	 */
-	private static float[] aCalc(float[][] weight, int[] corrupt) {
+	private static double[] aCalc(double[][] weight, int[] corrupt) {
 		int N = corrupt.length;
-		float result[] = new float[N];
+		double result[] = new double[N];
 		for (int i = 0; i < N; i++) {
 			result[i] = aICalc(i, weight, corrupt);
 		}
