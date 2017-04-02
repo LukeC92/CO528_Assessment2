@@ -263,12 +263,12 @@ public class hopf {
 	}
 	
 	private static int[] updateXRepeat(double[][] weight, int[] corrupt) {
-		int start[] = corrupt;
-		int end[] = new int[corrupt.length];
-		while(!start.equals(end)){
-			end = updateX(weight, start);
+		int[] output = updateX(weight, corrupt);
+		if(corrupt==output){
+			return output;
 		}
-		return end;
+		
+		return updateXRepeat(weight, output);
 	}	
 
 	private static int[] updateX(double[][] weight, int[] corrupt) {
