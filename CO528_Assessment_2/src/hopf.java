@@ -71,6 +71,7 @@ public class hopf {
 
 		// int[][] storedIntegers = new int[][];
 
+		/*
 		ArrayList<int[]> storedIntegers = new ArrayList<int[]>();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(args[0]));
@@ -86,15 +87,18 @@ public class hopf {
 		} catch (IOException e) {
 			// something went wrong with reading or closing
 		}
+		*/
+
+		
+		ArrayList<int[]> storedIntegers = splitTxt(args[0]);
+		ArrayList<int[]> corruptedIntegers = splitTxt(args[1]);
 		
 		double weight[][] = wArrayFromIntList(storedIntegers);
-		int N = weight.length;
-		for(int i = 0; i < N; i++){
-			for(int j = 0; j<N; j++){
-				System.out.print(weight[i][j]+ " ");
-			}
-			System.out.println();
-		}
+		
+		
+		
+		ArrayList<int[]> updatedcorrupted = updateAllXList(weight, corruptedIntegers);
+		printList(updatedcorrupted);
 		
 		
 		
@@ -110,7 +114,31 @@ public class hopf {
 			System.out.println();
 		}
 		*/
+		
+		int N = weight.length;
+		for(int i = 0; i < N; i++){
+			for(int j = 0; j<N; j++){
+				System.out.print(weight[i][j]+ " ");
+			}
+			System.out.println();
+		}
 
+	}
+	
+	
+	private static void printArray(int[] input){
+		for(int i = 0; i<input.length; i++){
+			System.out.print(input[i]+" ");
+		}
+		System.out.println();
+	}
+	
+	
+	private static void printList(ArrayList<int[]> list){
+		Iterator<int[]> it = list.iterator();
+		while (it.hasNext()){
+			printArray(it.next());
+		}
 	}
 
 	/**
@@ -186,7 +214,12 @@ public class hopf {
 		double wArray[][] = new double[top][top];
 		for (int i = 0; i < top; i++) {
 			for (int j = 0; j < top; j++) {
+				if(i!=j){
 				wArray[i][j] = wIJCalcFromList(i, j, integerlist);
+				}
+				else{
+					wArray[i][j] = 0;
+				}
 			}
 		}
 		return wArray;
@@ -243,6 +276,16 @@ public class hopf {
 			corrupt = updateXi(i, weight, corrupt);
 		}
 		return corrupt;
+	}
+	
+	private static ArrayList<int[]> updateAllXList(double[][] weight, ArrayList<int[]> corruptlist) {
+		ArrayList<int[]> updatedlist = new ArrayList<int[]>(); 
+			Iterator<int[]> it = corruptlist.iterator();
+			while (it.hasNext()) {
+				int pat[] = it.next();
+				updatedlist.add(updateXRepeat(weight, pat));
+		}
+		return updatedlist;
 	}
 
 	private static int[][] updateAllX(double[][] weight, int[][] corrupted) {
