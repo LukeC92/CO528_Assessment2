@@ -18,11 +18,10 @@ import java.util.Iterator;
  */
 public class hopfdouble {
 
-	/**
-	 * @param args
-	 */
+
+/*
 	public static void main(String[] args) {
-		/*
+		
 		 * System.out.println(splitPattern("1 2 3")[0]);
 		 * System.out.println(splitPattern("1 2 3")[1]);
 		 * System.out.println(splitPattern("-1 1 1")[0]);
@@ -67,11 +66,11 @@ public class hopfdouble {
 		 * 
 		 * for (int k = 0; k < 3; k++) { for (int j = 0; j < 3; j++) {
 		 * System.out.println(weighttest[k][j]); } }
-		 */
+		 
 
 		// double[][] storedIntegers = new double[][];
 
-		/*
+		
 		ArrayList<int[]> storedIntegers = new ArrayList<int[]>();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(args[0]));
@@ -87,7 +86,7 @@ public class hopfdouble {
 		} catch (IOException e) {
 			// something went wrong with reading or closing
 		}
-		*/
+		
 
 		
 		ArrayList<double[]> storedIntegers = splitTxt(args[0]);
@@ -105,7 +104,7 @@ public class hopfdouble {
 		
 		
 		
-		/*
+		
 		Iterator<int[]> it = storedIntegers.iterator();
 		while (it.hasNext()) {
 
@@ -115,9 +114,9 @@ public class hopfdouble {
 			}
 			System.out.println();
 		}
-		*/
 		
-		/*
+		
+		
 		int N = weight.length;
 		for(int i = 0; i < N; i++){
 			for(int j = 0; j<N; j++){
@@ -125,11 +124,11 @@ public class hopfdouble {
 			}
 			System.out.println();
 		}
-		*/
+		
 		
 
 	}
-	
+	*/
 	
 	private static void printArray(double[] input){
 		for(int i = 0; i<input.length; i++){

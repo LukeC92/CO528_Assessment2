@@ -21,62 +21,71 @@ public class hopf {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		ArrayList<double[]> storedlist = splitTxt(args[0]);
-		ArrayList<double[]> corruptedlist = splitTxt(args[1]);
-		double weights[][] = wArrayFromIntList(storedlist);
-		
-		
-		ArrayList<double[]> updatedcorrupted = updateAllXList(weights, corruptedlist);
-		printList(updatedcorrupted);
-		
-		/*
-		int N = weights.length;
-		for(int i = 0; i < N; i++){
-			for(int j = 0; j<N; j++){
-				System.out.print(weights[i][j]+ " ");
+		if (args.length != 2) {
+			System.out.println("Please enter 2 file paths.");
+		} else {
+			ArrayList<double[]> storedlist = splitTxt(args[0]);
+			ArrayList<double[]> corruptedlist = splitTxt(args[1]);
+			int length = storedlist.get(0).length;
+
+			if (patternSizeCheck(storedlist, length) && patternSizeCheck(corruptedlist, length)) {
+				if (isLearnable(storedlist)) {
+					double weights[][] = wArrayFromIntList(storedlist);
+
+					ArrayList<double[]> updatedcorrupted = updateAllXList(weights, corruptedlist);
+					printList(updatedcorrupted);
+				}
+				else{
+					System.out.println(0);
+				}
 			}
-			System.out.println();
+
+			/*
+			 * int N = weights.length; for(int i = 0; i < N; i++){ for(int j =
+			 * 0; j<N; j++){ System.out.print(weights[i][j]+ " "); }
+			 * System.out.println(); }
+			 */
+
+			else {
+				System.out.println("Please ensure all stored patterns and corrupted patterns are of the same length.");
+			}
+
 		}
-		*/
-		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	private static void printArray(double[] input){
-		String arrayString = "";
-		for(int i = 0; i<input.length; i++){
-			arrayString+= String.valueOf((int) input[i])+" ";
+
+	private static boolean patternSizeCheck(ArrayList<double[]> patterns, int length) {
+		int count = 0;
+		Iterator<double[]> it = patterns.iterator();
+		while (it.hasNext()) {
+			double pat[] = it.next();
+			if (pat.length != length) {
+				count++;
+			}
 		}
-		String result = arrayString.substring(0,  arrayString.length()-1);
+		return count == 0;
+	}
+
+	private static boolean isLearnable(ArrayList<double[]> storedpatterns) {
+		double ratio = (double) storedpatterns.size() / storedpatterns.get(0).length;
+		return ratio < 0.138 | storedpatterns.size()==1;
+	}
+
+	private static void printArray(double[] input) {
+		String arrayString = "";
+		for (int i = 0; i < input.length; i++) {
+			arrayString += String.valueOf((int) input[i]) + " ";
+		}
+		String result = arrayString.substring(0, arrayString.length() - 1);
 		System.out.println(result);
 	}
-	
-	private static void printList(ArrayList<double[]> list){
+
+	private static void printList(ArrayList<double[]> list) {
 		Iterator<double[]> it = list.iterator();
-		while (it.hasNext()){
+		while (it.hasNext()) {
 			printArray(it.next());
 		}
 	}
-	
+
 	/**
 	 * Splits a pattern which comes as a string into an array of doubles
 	 * 
@@ -92,15 +101,20 @@ public class hopf {
 		}
 		return doubleArray;
 	}
-	
+
 	/**
-	 * Takes a txt file of patterns and splits into an ArrayList of arrays of doubles.
-	 * @param file the path to the input file
+	 * Takes a txt file of patterns and splits into an ArrayList of arrays of
+	 * doubles.
+	 * 
+	 * @param file
+	 *            the path to the input file
 	 * @return the txt represented as an ArrayList of arrays of doubles
-	 * @throws FileNotFoundException if the file does not exist.
-	 * @throws IOException if something goes wrong with reading or closing.
+	 * @throws FileNotFoundException
+	 *             if the file does not exist.
+	 * @throws IOException
+	 *             if something goes wrong with reading or closing.
 	 */
-	private static ArrayList<double[]> splitTxt(String file){
+	private static ArrayList<double[]> splitTxt(String file) {
 		ArrayList<double[]> storedIntegers = new ArrayList<double[]>();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -118,13 +132,14 @@ public class hopf {
 		}
 		return storedIntegers;
 	}
-	
-	
+
 	/**
 	 * Calculates the weight between i and j nodes given the stored patterns.
+	 * 
 	 * @param i
 	 * @param j
-	 * @param storedlist The ArrayList representing the stored patterns.
+	 * @param storedlist
+	 *            The ArrayList representing the stored patterns.
 	 * @return The weight between i and j.
 	 */
 	private static double wIJCalcFromList(int i, int j, ArrayList<double[]> storedlist) {
@@ -137,14 +152,15 @@ public class hopf {
 			}
 		}
 		double N = (double) storedlist.size();
-		double result = total/N;
+		double result = total / N;
 		return result;
 	}
-	
-	
+
 	/**
 	 * Finds all the weight for the system given the stored patterns.
-	 * @param storedlist The ArrayList representing the stored patterns.
+	 * 
+	 * @param storedlist
+	 *            The ArrayList representing the stored patterns.
 	 * @return The weights as a double array of doubles.
 	 */
 	private static double[][] wArrayFromIntList(ArrayList<double[]> storedlist) {
@@ -158,8 +174,7 @@ public class hopf {
 		}
 		return wArray;
 	}
-	
-	
+
 	private static double aICalc(int i, double[][] weight, double[] corrupt) {
 		int N = corrupt.length;
 		double total = 0;
@@ -168,7 +183,7 @@ public class hopf {
 		}
 		return total;
 	}
-	
+
 	private static double[] updateXi(int i, double[][] weight, double[] corrupt) {
 		double a = aICalc(i, weight, corrupt);
 		if (a >= 0) {
@@ -178,30 +193,30 @@ public class hopf {
 		}
 		return corrupt;
 	}
-	
+
 	private static double[] updateXRepeat(double[][] weight, double[] corrupt) {
 		double[] output = updateX(weight, corrupt);
-		if(corrupt.equals(output)){
+		if (corrupt.equals(output)) {
 			return output;
 		}
-		
+
 		return updateXRepeat(weight, output);
-	}	
+	}
 
 	private static double[] updateX(double[][] weight, double[] corrupt) {
 		for (int i = 0; i < corrupt.length; i++) {
 			corrupt = updateXi(i, weight, corrupt);
-			//printArray(corrupt);
+			// printArray(corrupt);
 		}
 		return corrupt;
 	}
-	
+
 	private static ArrayList<double[]> updateAllXList(double[][] weight, ArrayList<double[]> corruptlist) {
-		ArrayList<double[]> updatedlist = new ArrayList<double[]>(); 
-			Iterator<double[]> it = corruptlist.iterator();
-			while (it.hasNext()) {
-				double pat[] = it.next();
-				updatedlist.add(updateXRepeat(weight, pat));
+		ArrayList<double[]> updatedlist = new ArrayList<double[]>();
+		Iterator<double[]> it = corruptlist.iterator();
+		while (it.hasNext()) {
+			double pat[] = it.next();
+			updatedlist.add(updateXRepeat(weight, pat));
 		}
 		return updatedlist;
 	}
@@ -229,5 +244,5 @@ public class hopf {
 		}
 		return result;
 	}
-	
+
 }
