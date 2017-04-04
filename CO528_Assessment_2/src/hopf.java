@@ -39,7 +39,6 @@ public class hopf {
 					printList(updatedcorrupted);
 				} else {
 					System.out.println(0);
-					printList(splitTxt(args[0]));
 				}
 			} else {
 				System.out.println("Please ensure all stored patterns and corrupted patterns are of the same length.");
@@ -49,7 +48,7 @@ public class hopf {
 	}
 
 	/**
-	 * Splits a pattern which comes as a string into an array of doubles
+	 * Splits a pattern represented as a string into an array of doubles.
 	 * 
 	 * @param input
 	 *            The input Pattern as a string
@@ -141,8 +140,8 @@ public class hopf {
 	}
 
 	/**
-	 * Calculates that activation of the ith node given its current (corrupted
-	 * state).
+	 * Calculates the activation of the ith node given its current (corrupted)
+	 * state.
 	 * 
 	 * @param i
 	 *            the index of the ith node
